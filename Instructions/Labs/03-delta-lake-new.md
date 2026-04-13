@@ -54,17 +54,7 @@ In this task, you will create a new workspace in Microsoft Fabric to use in this
 
     ![](./Images/starttour.png)
 
-1. From the **Microsoft Fabric** home page, select the **Fabric (1)** icon from the left navigation pane, and then choose **Power BI (2)** from the menu that appears.
-
-   ![](./Images/fab-ms-ex1-g2.png)
-
-   ![](./Images/fab-ms-ex1-g3.png)
-
-1. After switching to Power BI, you will be taken to the **Power BI** home page.
-
-   ![](./Images/fab-ms-ex1-g4.png) 
-
-1. From the **Power BI** home page, select **Account Manager (1)** in the top-right corner, and then choose **Free trial (2)** to start the Microsoft Fabric trial.
+1. From the **Fabric** home page, select **Account Manager (1)** in the top-right corner, and then choose **Free trial (2)** to start the Microsoft Fabric trial.
 
    ![](./Images/updtfreetrial.png)  
    
