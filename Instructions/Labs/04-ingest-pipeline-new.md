@@ -25,8 +25,6 @@ A data lakehouse is a common analytical data store for cloud-scale analytics sol
 
 Fabric also supports Apache Spark, enabling you to write and run code to process data at scale. By combining the pipeline and Spark capabilities in Fabric, you can implement complex data ingestion logic that copies data from external sources into the OneLake storage on which the lakehouse is based, and then uses Spark code to perform custom data transformations before loading it into tables for analysis.
 
-
-
 ## Task 1: Create a Subfolder in lakehouse
 
 In this task, you will create subfolder in the existing lakehouse.
@@ -107,13 +105,13 @@ In this task, you will create a pipeline in Microsoft Fabric to ingest data into
     - **Copy behavior**: None **(3)**
     - **File format**: DelimitedText **(4)**    
 
-      ![Screenshot of the Choose data source page.](./Images/dpp33.png)     
+      ![Screenshot of the Choose data source page.](./Images/nc56.png)     
 
 1. On the **Review + Save** page, review the details of your copy operation and then select **Save + Run**.
 
     ![Screenshot of a pipeline with a Copy Data activity.](./Images/dp700-lab1-13.png)
 
-1. A new pipeline containing a **Copy Data** activity is created, as shown here:
+1. A new pipeline containing a **Copy job** activity is created, as shown here:
 
     ![Screenshot of a pipeline with a Copy Data activity.](./Images/dp700-lab1-14.png)
 
@@ -121,8 +119,7 @@ In this task, you will create a pipeline in Microsoft Fabric to ingest data into
 
     ![Screenshot of a pipeline with a Copy Data activity.](./Images/dp700-lab1-16.png)
 
-1. Select your lakehouse **lakehouse<inject key="DeploymentID" enableCopy="false"/>** from the top menu bar.
-
+1. Select your lakehouse **fb_lakehouse** from the top menu bar.
 
 1. On the **Home** page, in the **Lakehouse explorer** pane, expand **Files** and select the **new_data (1)** folder to verify that the **sales.csv (2)** file has been copied.
 
@@ -227,8 +224,8 @@ In this task, you will modify your existing pipeline to include the notebook you
     - **General**:
         - **Name**: Delete old files
     - **Source (1)**
-        - **Connection**: **lakehouse odl_user_<inject key="DeploymentID" enableCopy="false"/> (2)**
-        - **Lakehouse:** **lakehouse<inject key="DeploymentID" enableCopy="false"/> (3)**
+        - **Connection**: **fabric_lakehouse odl_user_<inject key="DeploymentID" enableCopy="false"/> (2)**
+        - **Lakehouse:** **fabric_lakehouse(3)**
         - **File path type**: Wildcard file path **(4)**
         - **Folder path**: Files / **new_data** **(5)**
         - **Wildcard file name**: *.csv **(6)**       
@@ -247,7 +244,7 @@ In this task, you will modify your existing pipeline to include the notebook you
 
     ![Screenshot of a pipeline with Delete data and Copy data activities.](./Images/dpp45.png)
 
-1. Select the **Copy data** activity and then connect its **On Completion** output to the **Notebook** activity as shown here:
+1. Select the **Copy job** activity and then connect its **On Completion** output to the **Notebook** activity as shown here:
 
     ![Screenshot of a pipeline with Copy Data and Notebook activities.](./Images/dpp46.png)
 
@@ -271,8 +268,8 @@ In this task, you will modify your existing pipeline to include the notebook you
 
 1. Select Copy Job activity, under **Settings (1)**, set the following properties:
 
-    - **Connection**: CopyJob odl_user_<inject key="DeploymentID" enableCopy="false"/> **(2)**
-    - **Workspace**: fabric-<inject key="DeploymentID" enableCopy="false"/> **(3)**
+    - **Connection**: Select **Browse**, choose the **copy job**, and then click **Connect** in the Connection Credentials window. The field will be automatically populated with the CopyJob odl_user_<inject key="DeploymentID" enableCopy="false"/> **(2)**
+    - **Workspace**: dp_fabric-<inject key="DeploymentID" enableCopy="false"/> **(3)**
     - **Copy job**: Ingest Sales Data **(4)**
 
     ![](Images/dp700-lab1-21.png)
@@ -291,7 +288,7 @@ In this task, you will modify your existing pipeline to include the notebook you
 
      >**Note**: In case you receive the error message *Spark SQL queries are only possible in the context of a lakehouse. Please attach a lakehouse to proceed*: Open your notebook, select the lakehouse you created on the left pane, select **Remove all Lakehouses** and then add it again. Go back to the pipeline designer and select **&#9655; Run**.
 
-1. In the hub menu bar on the top, select your lakehouse **lakehouse<inject key="DeploymentID" enableCopy="false"/> (1)**.
+1. In the hub menu bar on the top, select your lakehouse **fabric_lakehouse**.
 
 1. Navigate to your **Lakehouse (1)**. Then in the **Explorer** pane, expand **Tables (2)** then **refresh** and select the **new_sales (3)** table to see a preview of the data it contains. This table was created by the notebook when it was run by the pipeline.
 
