@@ -135,14 +135,14 @@ In this task, you will create a new lakehouse in your workspace and upload a CSV
 
    ![](./Images/L1T2S7-2302.png)
 
-1. Navigate to **C:\LabFiles\dp-data-main (1)** and select the **products.csv (2)** file to upload, then click **Open (3)**.
-
-   ![](./Images/L1T2S9-2302.png)
-
 1. On the **Upload files** window, select the **folder icon** and choose the **products.csv** file to upload.
 
    ![](./Images/fab-ms-ex1-g16.png)
 
+1. Navigate to **C:\LabFiles\dp-data-main (1)** and select the **products.csv (2)** file to upload, then click **Open (3)**.
+
+   ![](./Images/L1T2S9-2302.png)
+   
 1. After selecting the file, verify that **products.csv (1)** is shown, then select **Upload (2)** to upload the file.
 
    ![](./Images/fab-ms-ex1-g17.png)
