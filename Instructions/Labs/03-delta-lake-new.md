@@ -161,276 +161,291 @@ In this task, you will create a new lakehouse in your workspace and upload a CSV
 
     ![](./Images/fileuploddone.png)
 
-<!--
-1. Download the data file for this exercise from [https://github.com/MicrosoftLearning/dp-data/raw/main/products.csv](https://github.com/MicrosoftLearning/dp-data/raw/main/products.csv), saving it as **products.csv** on your local computer (or lab VM if applicable).
+## Task 3: Explore data in a DataFrame
 
-    >**Note**: To download the file, open a new tab and paste the URL into the address bar.
+In this task, you'll begin working with a notebook in Microsoft Fabric to explore Delta Lake functionality using Apache Spark. You’ll first add explanatory markdown text to describe your notebook, then use PySpark to define a schema and read CSV data into a DataFrame. 
 
-    >Right-click anywhere on the page displaying the data and select Save as **products.csv (1)**, then choose **Save (2)** to download the file as **products.csv**.
+1. We will create a **New notebook**. For that click on **Open notebook (1)** and then **New notebook (2)**.
 
-    ![](./Images/fab-ms-ex1-g12.png)
+   ![Screen picture of products.csv uploaded to the lakehouse.](./Images/notebook-p4.png)
 
-      - **OR**, if you are using the lab virtual machine (lab VM), navigate to **C:\LabFiles\dp-data-main (1)** and select **products.csv (2)** to use the file.
+    After a few seconds, a new notebook containing a single cell will open. Notebooks are made up of one or more cells that can contain code or markdown (formatted text).
 
-        ![](./Images/fab-ms-ex1-g13.png)
--->
+1. If the **Enhance your notebook experience with Al tools** pop-up appears, click on **Skip tour**.
 
-## Task 3: Explore data in a dataframe
+    ![Screen picture of products.csv uploaded to the lakehouse.](./Images/notebook1-p4.png)
 
-In this task, you'll use a Fabric notebook to load and view the data you uploaded into your lakehouse. By reading the CSV file into a Spark dataframe, you can explore the structure and contents of the data before transforming it in later steps. This helps verify that the file was uploaded correctly and lets you preview the dataset using Spark’s built-in display capabilities.
+2. Select the first cell (which is currently a code cell), and then in the top-right tool bar, use the **M↓** button to convert it to a markdown cell. The text contained      in the cell will then be displayed as formatted text. Use markdown cells to provide explanatory information about your code.
 
-1. On the **Home (1)** page, click on the **3-dots (1)**, select the **Open notebook (3)** menu and select **New notebook (4)** while viewing the contents of the **products** folder.
+   ![Screen picture of products.csv uploaded to the lakehouse.](Images/dpp71.png)
 
-    ![](./Images/L1T3S1-2302.png)
+3. Use the 🖉 (Edit) button to switch the cell to editing mode, then modify the markdown as follows:
 
-    **Note:** After a few seconds, a new notebook containing a single *cell* will open. Notebooks are made up of one or more cells that can contain *code* or *markdown* (formatted text).
+    ```markdown
+    # Delta Lake tables 
+    Use this notebook to explore Delta Lake functionality 
+    ```
 
-1. If the AI tools introduction screen appears, select **Skip tour** to continue.
+4. Click anywhere in the notebook outside of the cell to stop editing it and see the rendered markdown.
 
-    ![](./Images/fab-ms-ex1-g19.png)
-
-1. Select the existing cell in the notebook, which contains some simple code, and then use its **&#128465;** (*Delete*) icon at its top-right to remove it - you will not need this code.
-
-    ![](./Images/updtdelcode.png)
-
-1. In the **Lakehouse explorer**, expand **Files (1)** and then select **products (2)** to view the **products.csv (3)** file you uploaded earlier.
-
-    ![](./Images/fab-ms-ex1-g20.png)
-
-    >**Note:** If you are not able to find **Lakehouse explorer**, under the **Explorer** pane, expand Items and expand the lakehouse, you will now see the lakehouse explorer.
-
-1. In the **ellipsis (...)** menu for **products.csv (1)**, select **Load data (2)** > **Spark (3)**. A new code cell containing the following code should be added to the notebook:
-
-    ![](./Images/loaddata.png)
+5. Add a new code cell, and add the following code **(1)** to read the products data into a DataFrame using a defined schema:
 
     ```python
-    df = spark.read.format("csv").option("header","true").load("Files/products/products.csv")
+    from pyspark.sql.types import StructType, IntegerType, StringType, DoubleType
+
+    # define the schema
+    schema = StructType() \
+    .add("ProductID", IntegerType(), True) \
+    .add("ProductName", StringType(), True) \
+    .add("Category", StringType(), True) \
+    .add("ListPrice", DoubleType(), True)
+
+    df = spark.read.format("csv").option("header","true").schema(schema).load("Files/products/products.csv")
     # df now is a Spark DataFrame containing CSV data from "Files/products/products.csv".
     display(df)
     ```
 
-    > **Tip**: You can hide the pane containing the files on the left by using its **<<** icon. Doing so will help you focus on the notebook.
+   >**Tip**: Hide or display the explorer panes by using the chevron « icon. This enables you to either focus on the notebook, or your files.
 
-1. Use the **&#9655;** (*Run cell*) button on the left of the cell to run it.
+6. Use the **Run cell** (▷) button on the left of the cell to run it **(2)**.
 
-    ![](./Images/fab-ms-ex1-g21.png)
+   >**Note**: Since this is the first time you’ve run any code in this notebook, a Spark session must be started. This means that the first run can take a minute or so to complete. Subsequent runs will be quicker.
 
-    > **Note**: Since this is the first time you've run any Spark code in this notebook, a Spark session must be started. This means that the first run can take a minute or so to complete. Subsequent runs will be quicker.
+7. When the cell code has completed, review the output below the cell, which should look similar to this **(3)**:
 
-1. When the cell command has completed, review the output below the cell, which should look similar to this:
+   ![Screen picture of products.csv data.](Images/md2-28.png)
+ 
+## Task 4: Create Delta tables
 
-     ![](./Images/L1T3S7-2302.png)
+In this task, you’ll learn how to persist DataFrames as Delta tables using the saveAsTable method in Apache Spark. Delta Lake supports the creation of both managed and external tables:
 
-    >**Note:** If you are getting errors here and also getting a table, then please ignore the errors and move on to further tasks.
+   * **Managed** Delta tables benefit from higher performance, as Fabric manages both the schema metadata and the data files.
 
-## Task 4: Create delta tables
+   * **External** tables allow you to store data externally, with the metadata managed by Fabric.
 
-In this task, you will create delta tables based on the data in the dataframe. You can save the dataframe as a delta table by using the `saveAsTable` method. Delta Lake supports the creation of both *managed* and *external* tables.
+## Task 4.1: Create a managed table
 
-### Create a *managed* table
+In this task, you'll create a managed Delta table by writing the DataFrame to your lakehouse using the saveAsTable method. 
 
-*Managed* tables are tables for which both the schema metadata and the data files are managed by Fabric. The data files for the table are created in the **Tables** folder.
+The data files are created in the **Tables** folder.
 
-1. Under the results returned by the first code cell, use the **+ Code** button to add a new code cell
+1. Under the results returned by the first code cell, use the **+ Code** icon to add a new code cell.
 
-   ![](./Images/L1T4S1-2302.png)
+    ![Screen picture of products.csv uploaded to the lakehouse.](./Images/notebook2-p4.png)
 
-    > **Note:** If the **+ Code** button isn’t visible, hover your mouse in the empty notebook area; the option will appear.
+   >**Tip**: To see the + Code icon, move the mouse to just below and to the left of the output from the current cell. Alternatively, in the menu bar, on the Edit tab, select **+ Add code cell**.
 
-1. Enter the following code in the new cell and select **Run** to execute it:
-
-    ```python
-   df.write.format("delta").saveAsTable("managed_products")
-    ```
-
-   ![](./Images/fab-ms-ex1-g23.png)
-
-1. In the **Lakehouse explorer**, open the **ellipsis (...) menu (1)** for the **Tables** folder and select **Refresh (2)**.
-
-   ![](./Images/L1T4S3-2302.png)
-
-1. Expand the **Tables** folder and verify that the **managed_products** table has been created.
-
-   ![](./Images/L1T4S4-2302.png)
-
-### Create an *external* table
-
-You can also create *external* tables for which the schema metadata is defined in the metastore for the lakehouse, but the data files are stored in an external location.
-
-1. Select **+ Code** to add a new code cell.
-
-   ![](./Images/fab-ms-ex1-g26.png)
-
-   > **Note:** If the **+ Code** button doesn’t appear, move your mouse around the empty notebook area; it will show up when you hover.
-
-1. And add the following code to it:
+2. To create a managed Delta table, add a new cell, enter the following code, and then run the cell:
 
     ```python
-   df.write.format("delta").saveAsTable("external_products", path="<abfs_path>/external_products")
+    df.write.format("delta").saveAsTable("managed_products")
     ```
 
-    **Note:** We will be replacing the **abfs_path** placeholder with our ABFS.
+3. In the Lakehouse explorer pane, **Refresh** the Tables folder and expand the Tables node to verify that the **managed_products** table has been created.
 
-1. In the **Lakehouse explorer** pane, in the **ellipsis (...) (1)** menu for the **Files** folder, select **Copy ABFS path (2)**.
+   ![Screen picture of products.csv data.](Images/dpp72.png)
 
-    ![](./Images/cpabfs.png)
+     >**Note**: The triangle icon next to the file name indicates a Delta table.
 
-    The ABFS path is the fully qualified path to the **Files** folder in the OneLake storage for your lakehouse - similar to this: *abfss://workspace@tenant-onelake.dfs.fabric.microsoft.com/lakehousename.Lakehouse/Files*
+1. The files for managed tables are stored in the **Tables** folder in the lakehouse. A folder named **managed_products** has been created, which stores the Parquet files and the delta_log folder for the table.
 
-1. In the code you entered into the code cell, replace **<abfs_path>** with the path you copied to the clipboard so that the code saves the dataframe as an external table with data files in a folder named **external_products** in your **Files** folder location. The full path should look similar to this:
+## Task 4.2: Create an external table
 
-    *abfss://workspace@tenant-onelake.dfs.fabric.microsoft.com/lakehousename.Lakehouse/Files/external_products*
+In this task, you'll create an external Delta table, where the data files are stored in a specified location (such as a folder in your lakehouse), while the table schema is maintained by Microsoft Fabric.
 
-1. After replacing **<abfs_path>** with the correct ABFS path, select **Run** to execute the cell.
+1. In the Lakehouse explorer pane, in the **ellipsis (...) (1)** menu for the **Files** folder, select **Copy ABFS path (2)**. The ABFS path is the fully qualified path to the lakehouse Files folder.
 
-   ![](./Images/fab-ms-ex1-g27.png)
+   ![Screenshot of uploaded files in a lakehouse.](./Images/md2-29.png)
 
-1. In the **Lakehouse explorer**, open the **ellipsis (...) menu (1)** for the **Tables** folder and select **Refresh (2)**. Then expand **Tables** and verify that the **external_products (3)** table has been created.
+2. In a new code cell, paste the ABFS path. Add the following code **(1)**, using cut and paste to insert the abfs_path into the correct place in the code:
 
-   ![](./Images/L1T4.2S6-2302.png)
+    ```python
+    df.write.format("delta").saveAsTable("external_products", path="abfs_path/external_products")
+    ```
 
-1. In the **Lakehouse explorer**, right click on **Files** folder and select **Refresh (1)**. Then expand **Files** and verify that the **external_products (2)** folder has been created.
+3. The full path should look similar to this:
 
-   ![](./Images/L1T4.2S7-2302.png)
+    ```python
+    abfss://workspace@tenant-onelake.dfs.fabric.microsoft.com/lakehousename.Lakehouse/Files/external_products
+    ```
 
-### Compare *managed* and *external* tables
+4. **Run (2)** the cell to save the DataFrame as an external table in the Files/external_products folder.
 
-Let's explore the differences between managed and external tables.
+5. In the Lakehouse explorer pane, **Refresh** the Tables folder and expand the Tables node and verify that the **external_products (3)** table has been created containing    the schema metadata.
+
+   ![Screenshot of uploaded files in a lakehouse.](./Images/md2-30.png)
+
+6. In the Lakehouse explorer pane, in the … menu for the Files folder, select **Refresh**. Then expand the Files node and verify that the **external_products** folder has been created for the table’s data files.
+
+## Task 5: Compare managed and external tables
+
+In this task, you will use the %%sql magic command to query both managed and external Delta tables and observe the differences between them. 
+
+1. In a new code cell and run the following code:
+
+    ```python
+    %%sql
+    DESCRIBE FORMATTED managed_products;
+    ```
+
+2. In the results, view the Location property for the table. Click on the **Location (1)** value in the Data type column to see the full path. Notice that the OneLake storage location ends with **/Tables/managed_products (2)**.
+
+   ![Screenshot of uploaded files in a lakehouse.](./Images/managedtable-p4.png)
+
+3. Modify the DESCRIBE command to show the details of the external_products table as shown here:
+
+    ```python
+    %%sql
+    DESCRIBE FORMATTED external_products;
+    ```
+
+4. Run the cell and in the results, view the **Location (1)** property for the table. Widen the Data type column to see the full path and notice that the OneLake storage locations end with **/Files/external_products (2)**.
+
+   ![Screenshot of uploaded files in a lakehouse.](./Images/managedtable1-p4.png)
+
+5. In a new code cell and run the following code:
+
+    ```python
+    %%sql
+    DROP TABLE managed_products;
+    DROP TABLE external_products;
+    ```
+
+6. In the Lakehouse explorer pane, **Refresh** the **Tables** folder to verify that no tables are listed in the Tables node.
+
+   ![Screenshot of uploaded files in a lakehouse.](./Images/dpp75.png)
+
+7. In the Lakehouse explorer pane, **Refresh** the **Files (1)** folder and verify that the **external_products (2)** file has *not* been deleted. Select this folder to       view the Parquet data files and the _delta_log folder. 
+
+   ![Screenshot of uploaded files in a lakehouse.](./Images/dpp76.png)
+
+The metadata for the external table was deleted, but not the data file.
+
+## Task 6: Use SQL to create a Delta table
+
+In this task, you'll create a Delta table using SQL within a notebook cell by leveraging the %%sql magic command. 
 
 1. Add another code cell and run the following code:
 
-    ```sql
-   %%sql
-
-   DESCRIBE FORMATTED managed_products;
-    ```
-   
-   The output will look similar to this:
-
-    ![](./Images/L1T4.3S1-2302.png)
-   
-   In the results, view the **Location** property for the table, which should be a path to the OneLake storage for the lakehouse ending with **/Tables/managed_products** (you may need to widen the **Data type** column to see the full path).
-
-1. Modify the `DESCRIBE` command to show the details of the **external_products** table as shown here:
-
-    ```sql
-   %%sql
-
-   DESCRIBE FORMATTED external_products;
+    ```python
+    %%sql
+    CREATE TABLE products
+    USING DELTA
+    LOCATION 'Files/external_products';
     ```
 
-   The output will look similar to this:
+2. In the Lakehouse explorer pane, in the **ellipsis (...)** menu for the **Tables** folder, select **Refresh**. Then expand the Tables node and verify that a new table named **products** is listed. Then expand the table to view the schema.
 
-    ![](./Images/descext.png)
+    ![Screen picture of products.csv uploaded to the lakehouse.](./Images/products-p4.png)
 
-   In the results, view the **Location** property for the table, which should be a path to the OneLake storage for the lakehouse ending with **/Files/external_products** (you may need to widen the **Data type** column to see the full path).
+3. Add another code cell and run the following code:
 
-    The files for the managed table are stored in the **Tables** folder in the OneLake storage for the lakehouse. In this case, a folder named **managed_products** has been created to store the Parquet files and the **_delta_log** folder for the table you created.
-
-1. Add another code cell and run the following code:
-
-    ```sql
-   %%sql
-
-   DROP TABLE managed_products;
-   DROP TABLE external_products;
+    ```python
+    %%sql
+    SELECT * FROM products;
     ```
 
-1. In the **Lakehouse explorer**, open the **ellipsis (...) menu (1)** for the **Tables** folder and select **Refresh (2)**. Then expand **Tables (3)** and verify that no tables are listed now.
+## Task 7: Explore table versioning
 
-    ![](./Images/L1T4.3S4-2302.png)
+In this task, you will examine the version history of a Delta table by using the DESCRIBE HISTORY command in a notebook. 
 
-1. In the **Lakehouse explorer** pane, expand the **Files** folder and verify that the **external_products (1)** has not been deleted. Select this folder to view the **Parquet data files (2)** and **_delta_log** folder for the data that was previously in the **external_products** table. The table metadata for the external table was deleted, but the files were not affected.
+Transaction history for Delta tables is stored in JSON files in the delta_log folder. You can use this transaction log to manage data versioning.
 
-    ![](./Images/L1T4.3S5-2302.png)
+1. Add a new code cell to the notebook and run the following code, which implements a 10% reduction in the price for mountain bikes:
 
-### Use SQL to create a table
-
-1. Add another code cell and run the following code:
-
-    ```sql
-   %%sql
-
-   CREATE TABLE products
-   USING DELTA
-   LOCATION 'Files/external_products';
+    ```python
+    %%sql
+    UPDATE products
+    SET ListPrice = ListPrice * 0.9
+    WHERE Category = 'Mountain Bikes';
     ```
 
-1. In the **Lakehouse explorer**, open the **ellipsis (...) menu (1)** for the **Tables** folder and select **Refresh (2)**. Then expand the **products** table and verify that its schema fields match the original dataframe from the **external_products** folder.
+2. Add another code cell and run the following code:
 
-   ![](./Images/L1T4.4S2-2302.png)
-
-1. Add another code cell and run the following code:
-
-    ```sql
-   %%sql
-
-   SELECT * FROM products;
-   ```
-
-   The output will look similar to this:
-   
-    ![](./Images/starselect.png)
-
-## Task 5: Explore table versioning
-
-In this task, you will explore the versioning capabilities of delta tables. Transaction history for delta tables is stored in JSON files in the **delta_log** folder. You can use this transaction log to manage data versioning.
-
-1. Add a new code cell to the notebook and run the following code:
-
-    ```sql
-   %%sql
-
-   UPDATE products
-   SET ListPrice = ListPrice * 0.9
-   WHERE Category = 'Mountain Bikes';
-    ```
-
-    This code implements a 10% reduction in the price for mountain bikes.
-
-    The output will look similar to this:
-
-     ![](./Images/reduction.png)
-
-1. Add another code cell and run the following code:
-
-    ```sql
-   %%sql
-
-   DESCRIBE HISTORY products;
+    ```python
+    %%sql
+    DESCRIBE HISTORY products;
     ```
 
     The results show the history of transactions recorded for the table.
 
-    The output will look similar to this:
-
-     ![](./Images/history.png)
-
-1. Add another code cell and run the following code:
+3. Add another code cell and run the following code:
 
     ```python
-   delta_table_path = 'Files/external_products'
+    delta_table_path = 'Files/external_products'
+    # Get the current data
+    current_data = spark.read.format("delta").load(delta_table_path)
+    display(current_data)
 
-   # Get the current data
-   current_data = spark.read.format("delta").load(delta_table_path)
-   display(current_data)
-
-   # Get the version 0 data
-   original_data = spark.read.format("delta").option("versionAsOf", 0).load(delta_table_path)
-   display(original_data)
+    # Get the version 0 data
+    original_data = spark.read.format("delta").option("versionAsOf", 0).load(delta_table_path)
+    display(original_data)
     ```
 
-    The results show two DataFrames — one containing the data after the price reduction, and the other showing the original version of the data.
+    Two result sets are returned - one containing the data after the price reduction, and the other showing the original version of the data.
 
-    The output will look similar to this:
+    ![Screen picture of products.csv uploaded to the lakehouse.](./Images/products1-p4.png)
 
-    ![](./Images/df.png)
-    
-    ![](./Images/df1.png)
-    
-    ![](./Images/df2.png)
+## Task 8: Analyze Delta table data with SQL queries
 
-## Task 6: Use delta tables for streaming data
+In this task, you will analyze the data stored in your Delta table by writing SQL queries using the %%sql magic command in your notebook. This allows you to interact with the Delta table using familiar SQL syntax, making it easy to perform data exploration and analysis. You will create a temporary view from the managed_products table and run queries to filter, aggregate, and sort data, helping you uncover meaningful insights from the dataset.
+
+Using the SQL magic command, you can use SQL syntax instead of PySpark. Here, you will create a temporary view from the products table using a `SELECT` statement.
+
+1. Add a new code cell, and run the following code to create and display the temporary view:
+
+    ```python
+   %%sql
+   -- Create a temporary view
+   CREATE OR REPLACE TEMPORARY VIEW products_view
+   AS
+       SELECT Category, COUNT(*) AS NumProducts, MIN(ListPrice) AS MinPrice, MAX(ListPrice) AS MaxPrice, AVG(ListPrice) AS AvgPrice
+       FROM products
+       GROUP BY Category;
+
+   SELECT *
+   FROM products_view
+   ORDER BY Category;    
+    ```
+
+2. Add a new code cell, enter the following code to return the top 10 categories by number of products **(1)** and then click on **Run (2)**:
+
+    ```python
+   %%sql
+   SELECT Category, NumProducts
+   FROM products_view
+   ORDER BY NumProducts DESC
+   LIMIT 10;
+    ```
+
+3. When the data is returned, select the **+ New Chart (3)** view to display a bar chart.
+
+    ![Screen picture of SQL select statement and results.](./Images/newchart-p4.png)
+
+1. Click on the **Build my own (1)** from the bottom right. Under the **Chart settings** section, scroll down and select the follosing settings:
+
+    - X-axis: **Category (2)**
+
+    - Y-axis: **NumProducts (3)**
+
+        ![Screen picture of SQL select statement and results.](./Images/newchart1-p4.png)
+
+        ![Screen picture of SQL select statement and results.](./Images/newchart2-p4.png)
+
+        Alternatively, you can run a SQL query using PySpark.
+
+4. Add a new code cell, and run the following code:
+
+    ```python
+   from pyspark.sql.functions import col, desc
+
+   df_products = spark.sql("SELECT Category, MinPrice, MaxPrice, AvgPrice FROM products_view").orderBy(col("AvgPrice").desc())
+   display(df_products.limit(6))
+    ```
+
+    ![Screen picture of SQL select statement and results.](./Images/newchart3-p4.png)
+
+## Task 9: Use delta tables for streaming data
 
 In this task, you will explore how to use delta tables for streaming data.
 
