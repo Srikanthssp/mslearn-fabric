@@ -39,7 +39,7 @@ In this task, you will create subfolder in the existing lakehouse.
 
 1. Create a subfolder named **new_data (1)** and then click on **Create (2)**.
 
-   ![Screen picture showing auto generated code and data.](./Images2/4t1-3.png)
+   ![Screen picture showing auto generated code and data.](./Images/4t1-3.png)
 
 ## Task 2: Create a pipeline
 
@@ -67,7 +67,7 @@ In this task, you will create a pipeline in Microsoft Fabric to ingest data into
     - **Data gateway**: (none) **(4)**
     - **Authentication kind**: Anonymous **(5)**
 
-      ![Screenshot of the Choose data source page.](./Images2/4t2-4.png)
+      ![Screenshot of the Choose data source page.](./Images/4t2-4.png)
 
 1. Then ensure the following settings are selected and then click on **Next**:
 
@@ -78,7 +78,7 @@ In this task, you will create a pipeline in Microsoft Fabric to ingest data into
     - **Request timeout**: *Leave blank*
     - **Max concurrent connections**: *Leave blank*
 
-      ![Screenshot of the Choose data source page.](./Images2/4t2-5.png)
+      ![Screenshot of the Choose data source page.](./Images/4t2-5.png)
 
 1. Wait for the data to be sampled and then ensure that the following settings are selected. Ensure following settings are select and then click on **Next (6)**:
 
@@ -134,7 +134,7 @@ In this task, you will create a notebook in Microsoft Fabric to begin processing
 
 1. On the **Home** page for your lakehouse, in the **Open notebook (1)** menu, select **New notebook (2)**.
 
-    ![Screenshot of a pipeline with a Copy Data activity.](./Images2/4t3-1.png)
+    ![Screenshot of a pipeline with a Copy Data activity.](./Images/4t3-1.png)
 
      >**Note**: After a few seconds, a new notebook containing a single *cell* will open. Notebooks are made up of one or more cells that can contain *code* or *markdown* (formatted text).
 
@@ -191,13 +191,13 @@ In this task, you will create a notebook in Microsoft Fabric to begin processing
 
 1. Then set the **Name** of the notebook to **Load Sales (1)** and close the settings pane **(2)**.
 
-    ![Screenshot of a pipeline with a Copy Data activity.](./Images2/4t3-8.png)
+    ![Screenshot of a pipeline with a Copy Data activity.](./Images/4t3-8.png)
 
 1. In the hub menu bar on the top, select your lakehouse **lakehouse<inject key="DeploymentID" enableCopy="false"/>**.
 
 1. In the **Explorer** pane, refresh the view. Then expand **Tables (1)**, and select the **sales (2)** table to see a preview of the data it contains **(3)**.
 
-    ![Screenshot of a pipeline with a Copy Data activity.](./Images2/4t3-10.png)
+    ![Screenshot of a pipeline with a Copy Data activity.](./Images/4t3-10.png)
 
 ## Task 4: Modify the pipeline
 
@@ -279,7 +279,7 @@ In this task, you will modify your existing pipeline to include the notebook you
 
 1. On the **Home** tab, use the **&#128427; (1)** (*Save*) icon to save the pipeline. Then use the **&#9655; Run (2)** button to run the pipeline.
 
-    ![Screenshot of a pipeline with a Dataflow activity.](./Images2/4t4-9.png)
+    ![Screenshot of a pipeline with a Dataflow activity.](./Images/4t4-9.png)
 
 1. Click on **Save and run**.
 
@@ -287,7 +287,7 @@ In this task, you will modify your existing pipeline to include the notebook you
 
 1. Click on **Refresh (1)**, untill all of the activities are succeeded **(2)**.  
 
-    ![Screenshot of a pipeline with a Dataflow activity.](./Images2/4t4-10.png)
+    ![Screenshot of a pipeline with a Dataflow activity.](./Images/4t4-10.png)
 
      >**Note**: In case you receive the error message *Spark SQL queries are only possible in the context of a lakehouse. Please attach a lakehouse to proceed*: Open your notebook, select the lakehouse you created on the left pane, select **Remove all Lakehouses** and then add it again. Go back to the pipeline designer and select **&#9655; Run**.
 
@@ -295,7 +295,7 @@ In this task, you will modify your existing pipeline to include the notebook you
 
 1. Navigate to your **Lakehouse (1)**. Then in the **Explorer** pane, expand **Tables (2)** then **refresh** and select the **new_sales (3)** table to see a preview of the data it contains. This table was created by the notebook when it was run by the pipeline.
 
-    ![Screenshot of a pipeline with a Dataflow activity.](./Images2/4t4-12.png)
+    ![Screenshot of a pipeline with a Dataflow activity.](./Images/4t4-12.png)
 
 ## Summary
 
