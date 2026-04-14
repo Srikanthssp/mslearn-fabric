@@ -117,8 +117,6 @@ In this task, you will create a pipeline in Microsoft Fabric to ingest data into
 
 1. When the pipeline starts to run, you can monitor its status in the **Output** pane under the pipeline designer. Use the **&#8635;** (*Refresh*) icon to refresh the status, and wait until it has **succeeded**.
 
-    ![Screenshot of a pipeline with a Copy Data activity.](./Images/dp700-lab1-16.png)
-
 1. Select your lakehouse **fabric_lakehouse** from the top menu bar.
 
 1. On the **Home** page, in the **Lakehouse explorer** pane, expand **Files** and select the **new_data (1)** folder to verify that the **sales.csv (2)** file has been copied.
