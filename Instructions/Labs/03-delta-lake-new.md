@@ -10,12 +10,17 @@ In this lab, you will learn how to use Delta tables in Apache Spark within Micro
 
 In this lab, you will complete the following tasks:
 
-- Task 1: Create a workspace
-- Task 2: Create a lakehouse and upload data
-- Task 3: Explore data in a dataframe
-- Task 4: Create delta tables
-- Task 5: Explore table versioning
-- Task 6: Use delta tables for streaming data
+ - Task 1: Create a workspace
+ - Task 2: Create a lakehouse and upload data
+ - Task 3: Explore data in a DataFrame
+ - Task 4: Create Delta tables
+ - Task 4.1: Create a managed table
+ - Task 4.2: Create an external table
+ - Task 5: Compare managed and external tables
+ - Task 6: Use SQL to create a Delta table
+ - Task 7: Explore table versioning
+ - Task 8: Analyze Delta table data with SQL queries
+ - Task 9: Use Delta tables for streaming data
 
 ## Architecture Diagram
 
